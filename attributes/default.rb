@@ -6,5 +6,5 @@ default[:ssh_key_wrapper] = {
   :enable_wrapper     => true,
   :user               => 'root',
   :group              => 'root',
-  :private_ssh_keys   => {}
+  :private_keys   => {}
 }
