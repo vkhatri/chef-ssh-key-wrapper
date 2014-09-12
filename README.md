@@ -8,7 +8,7 @@ All SSH Private Keys are stored in a Databag as a Databag item.
 
 ## Cookbook Recipes
 
-- `ddnsupdate::keys`   - manage ssh key and wrapper via node attribute using LWRP
+- `ddnsupdate::private_keys`   - manage ssh key and wrapper via node attribute using LWRP
 
 
 ## Cookbook Repository
@@ -32,15 +32,15 @@ ssh_key_wrapper_private LWRP is used to create/delete ssh private key file and s
 *via node attribute:*
 
     "default_attributes": {
-			"ssh_key_wrapper": {
+      "ssh_key_wrapper": {
       	"private_keys": {
-        	"test": {
-          	"user": "virender",
-          	"group": "devops"
-        	}
-      	}
-			}
-		}
+          "test": {
+            "user": "virender",
+            "group": "devops"
+          }
+        }
+      }
+    }
 
 
 
@@ -89,7 +89,7 @@ Parameters:
  * `default[:ssh_key_wrapper][:enable_wrapper]` (default: `true`): create ssh wrapper
  * `default[:ssh_key_wrapper][:user]` (default: `root`): default ssh key and wrapper file owner
  * `default[:ssh_key_wrapper][:group]` (default: `root`): default ssh key and wrapper file group
- * `default[:ssh_key_wrapper][:private_ssh_keys]` (default: `{}`): attribute used by recipe `ssh_key_wrapper::private_keys` to create `ssh_key_wrapper_private` resources
+ * `default[:ssh_key_wrapper][:private_keys]` (default: `{}`): attribute used by recipe `ssh_key_wrapper::private_keys` to create `ssh_key_wrapper_private` resources
 
 
 ## Contributing
