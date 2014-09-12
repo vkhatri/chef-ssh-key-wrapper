@@ -1,7 +1,7 @@
 ssh_key_wrapper Cookbook
 ========================
 
-This is an [OpsCode Chef] cookbook for Managing SSH Private Key using Chef Data Bag and SSH Wrapper mainly for GIT.
+This is an [OpsCode Chef] cookbook for Managing SSH Private Key file using Chef Data Bag and SSH Wrapper file mainly for GIT.
 
 All SSH Private Keys are stored in a Databag as a Databag item.
 
@@ -23,7 +23,7 @@ None
 
 ## Cookbook LWRP
 
-**LWRP - ssh_key_wrapper_private*
+**LWRP - ssh_key_wrapper_private**
 
 ssh_key_wrapper_private LWRP is used to create/delete ssh private key file and ssh wrapper file.
 
