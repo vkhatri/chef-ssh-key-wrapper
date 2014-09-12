@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-node.ssh_key_wrapper.private_keys.each do |key, options|
+node['ssh_key_wrapper']['private_keys'].each do |key, options|
   ssh_key_wrapper_private key do
     enable_wrapper    options[:enable_wrapper]
     wrapper_file      options[:wrapper_file]

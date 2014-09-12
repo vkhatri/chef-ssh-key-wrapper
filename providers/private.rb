@@ -40,7 +40,7 @@ action :create do
   key_file = new_resource.key_file || default_key_file(new_resource.user, new_resource.key_name)
   wrapper_file = new_resource.wrapper_file || (key_file + '_wrapper')
 
-  file key_file do
+  file "ssh_private_key_file_#{key_file}" do
     content key_content
     owner   new_resource.user
     group   new_resource.group
@@ -48,7 +48,7 @@ action :create do
   end
 
 
-  template wrapper_file do
+  template "ssh_wrapper_file_#{wrapper_file}" do
     cookbook  new_resource.cookbook
     source    new_resource.template
     owner     new_resource.user
@@ -58,6 +58,8 @@ action :create do
     only_if { new_resource.enable_wrapper }
   end
 
+  # new_resource.updated_by_last_action(true)
+
 end
 
 action :delete do
@@ -65,13 +67,15 @@ action :delete do
   key_file = new_resource.key_file || default_key_file(new_resource.user, new_resource.key_name)
   wrapper_file = new_resource.wrapper_file || (key_file + '_wrapper')
 
-  file key_file do
+  file "ssh_private_key_file_#{key_file}" do
     action :delete
   end
 
-  file wrapper_file do
+  file "ssh_wrapper_file_#{wrapper_file}" do
     action :delete
     only_if { new_resource.enable_wrapper }
   end
+
+  # new_resource.updated_by_last_action(true)
 
 end
