@@ -17,9 +17,8 @@
 # limitations under the License.
 #
 
-node.ssh_key_wrapper.ssh_keys.each do |key, options|
-  puts "ccreating kkkey #{key} with options #{options.inspect}"
-  ssh_key_wrapper key do
+node.ssh_key_wrapper.private_keys.each do |key, options|
+  ssh_key_wrapper_private key do
     enable_wrapper    options[:enable_wrapper]
     wrapper_file      options[:wrapper_file]
     key_file          options[:key_file]
@@ -30,5 +29,6 @@ node.ssh_key_wrapper.ssh_keys.each do |key, options|
     template          options[:template]
     user              options[:user]
     group             options[:group]
+    action            options[:action]
   end
 end

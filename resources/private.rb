@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: ssh_key_wrapper
-# Resource:: default
+# Resource:: private
 #
 # Copyright 2014, Virender Khatri
 #
@@ -24,10 +24,10 @@ actions :create, :delete
 default_action :create
 
 attribute   :enable_wrapper,    :kind_of => [TrueClass, FalseClass], :default => node.ssh_key_wrapper.enable_wrapper
-attribute   :wrapper_file,    :kind_of => String, :required => true,  :default => nil
-attribute   :key_file,        :kind_of => String, :required => true,  :default => nil
+attribute   :wrapper_file,    :kind_of => String, :default => nil
+attribute   :key_file,        :kind_of => String, :default => nil
 attribute   :key_secret,      :kind_of => String, :default => nil
-attribute   :key_name,        :kind_of => String, :name_attribute => true,  :required => true
+attribute   :key_name,        :kind_of => String, :name_attribute => true,  :required => true, :default => nil
 attribute   :databag,         :kind_of => String, :default => node.ssh_key_wrapper.databag
 attribute   :user,      :kind_of => String, :default => 'root'
 attribute   :group,     :kind_of => String, :default => 'root'

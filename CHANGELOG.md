@@ -3,7 +3,7 @@ ssh_key_wrapper CHANGELOG
 
 This file is used to list changes made in each version of the ssh_key_wrapper cookbook.
 
-0.1.0
+0.1.1
 -----
 - vkhatri - Initial release of ssh_key_wrapper
 

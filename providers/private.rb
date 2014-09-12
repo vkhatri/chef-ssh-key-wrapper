@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: ssh_key_wrapper
-# Provider:: default
+# Provider:: private
 #
 # Copyright 2014, Virender Khatri
 #
@@ -22,16 +22,25 @@ def whyrun_supported?
   true
 end
 
+def default_key_file(user, key_name)
+  ::File.join(node['etc']['passwd'][user]['dir'], '.ssh', key_name)
+end
+
 action :create do
 
-  puts Chef::VERSION
   databag = data_bag_item(new_resource.databag, new_resource.key_name)
   raise "data bag or data bag key item does not exists, databag #{new_resource.databag} must have an item #{new_resource.key_name}" unless databag
 
   key_content = databag['key']
   raise "databag #{new_resource.databag} item #{new_resource.key_name} must have ssh key content attribute 'key'" unless key_content
 
-  file new_resource.key_file do
+  # Decrypt SSH Private Key provided Key_secret
+  key_content = OpenSSL::PKey.read(key_content, new_resource.key_secret) if new_resource.key_secret
+
+  key_file = new_resource.key_file || default_key_file(new_resource.user, new_resource.key_name)
+  wrapper_file = new_resource.wrapper_file || (key_file + '_wrapper')
+
+  file key_file do
     content key_content
     owner   new_resource.user
     group   new_resource.group
@@ -39,23 +48,30 @@ action :create do
   end
 
 
-  template new_resource.wrapper_file do
+  template wrapper_file do
     cookbook  new_resource.cookbook
     source    new_resource.template
     owner     new_resource.user
     group     new_resource.group
     mode      0550
-    variables ({:key => new_resource.key_file })
+    variables ({:key => key_file })
+    only_if { new_resource.enable_wrapper }
   end
 
 end
 
 action :delete do
-  file new_resource.key_file do
+
+  key_file = new_resource.key_file || default_key_file(new_resource.user, new_resource.key_name)
+  wrapper_file = new_resource.wrapper_file || (key_file + '_wrapper')
+
+  file key_file do
     action :delete
   end
 
-  file new_resource.wrapper_file do
+  file wrapper_file do
     action :delete
+    only_if { new_resource.enable_wrapper }
   end
+
 end
