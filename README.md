@@ -105,7 +105,7 @@ Parameters:
 
 ## Copyright & License
 
-Authors:: Virender Khatri (vir.khatri@gmail.com)
+Authors:: Virender Khatri and [Contributors]
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -121,3 +121,4 @@ limitations under the License.
 
 
 [Opscode Chef]: https://wiki.opscode.com/display/chef/Home
+[Contributors]: https://github.com/vkhatri/chef-ssh-key-wrapper/graphs/contributors
