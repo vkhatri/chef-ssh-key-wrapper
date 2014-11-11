@@ -6,3 +6,4 @@ default['ssh_key_wrapper']['user']      = 'root'
 default['ssh_key_wrapper']['group']     = 'root'
 default['ssh_key_wrapper']['private_keys']   = {}
 default['ssh_key_wrapper']['enable_wrapper']  = true
+default['ssh_key_wrapper']['manage_key_dir'] = true

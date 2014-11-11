@@ -19,16 +19,16 @@
 
 node['ssh_key_wrapper']['private_keys'].each do |key, options|
   ssh_key_wrapper_private key do
-    enable_wrapper    options[:enable_wrapper]
-    wrapper_file      options[:wrapper_file]
-    key_file          options[:key_file]
-    key_secret        options[:key_secret]
-    key_name          options[:key_name]
-    databag           options[:databag]
-    cookbook          options[:cookbook]
-    template          options[:template]
-    user              options[:user]
-    group             options[:group]
-    action            options[:action]
+    enable_wrapper options['enable_wrapper']
+    wrapper_file options['wrapper_file']
+    key_file options['key_file']
+    key_secret options['key_secret']
+    key_name options['key_name']
+    databag options['databag']
+    cookbook options['cookbook']
+    template options['template']
+    user options['user']
+    group options['group']
+    action options['action']
   end
 end

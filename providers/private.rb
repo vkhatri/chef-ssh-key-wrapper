@@ -17,7 +17,6 @@
 # limitations under the License.
 #
 
-
 def whyrun_supported?
   true
 end
@@ -29,37 +28,40 @@ end
 action :create do
 
   databag = data_bag_item(new_resource.databag, new_resource.key_name)
-  raise "data bag or data bag key item does not exists, databag #{new_resource.databag} must have an item #{new_resource.key_name}" unless databag
+  fail "data bag or data bag key item does not exists, databag #{new_resource.databag} must have an item #{new_resource.key_name}" unless databag
 
   key_content = databag['key']
-  raise "databag #{new_resource.databag} item #{new_resource.key_name} must have ssh key content attribute 'key'" unless key_content
+  fail "databag #{new_resource.databag} item #{new_resource.key_name} must have ssh key content attribute 'key'" unless key_content
 
-  # Decrypt SSH Private Key provided Key_secret
+  # decrypt ssh private key provided key_secret
   key_content = OpenSSL::PKey.read(key_content, new_resource.key_secret) if new_resource.key_secret
 
   key_file = new_resource.key_file || default_key_file(new_resource.user, new_resource.key_name)
   wrapper_file = new_resource.wrapper_file || (key_file + '_wrapper')
 
+  directory ::File.dirname(key_file) do
+    owner new_resource.user
+    group new_resource.group
+    mode 0600
+    only_if { new_resource.manage_key_dir }
+  end
+
   file "ssh_private_key_file_#{key_file}" do
     content key_content
-    owner   new_resource.user
-    group   new_resource.group
-    mode    0400
+    owner new_resource.user
+    group new_resource.group
+    mode 0400
   end
-
 
   template "ssh_wrapper_file_#{wrapper_file}" do
-    cookbook  new_resource.cookbook
-    source    new_resource.template
-    owner     new_resource.user
-    group     new_resource.group
-    mode      0550
-    variables ({:key => key_file })
+    cookbook new_resource.cookbook
+    source new_resource.template
+    owner new_resource.user
+    group new_resource.group
+    mode 0550
+    variables(:key => key_file)
     only_if { new_resource.enable_wrapper }
   end
-
-  # new_resource.updated_by_last_action(true)
-
 end
 
 action :delete do
@@ -75,7 +77,4 @@ action :delete do
     action :delete
     only_if { new_resource.enable_wrapper }
   end
-
-  # new_resource.updated_by_last_action(true)
-
 end
