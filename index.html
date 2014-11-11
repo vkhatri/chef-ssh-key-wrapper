@@ -18,7 +18,7 @@
     <div class="wrapper">
       <header>
         <h1>Chef SSH Key Wrapper</h1>
-        <p>Opscode Chef cookbook LWRP to Manage SSH Private Key &amp; SSH Wrapper</p>
+        <p>Chef cookbook LWRP to Manage SSH Key &amp; Wrapper</p>
         <p class="view"><a href="https://github.com/vkhatri/chef-ssh-key-wrapper">View the Project on GitHub <small>vkhatri/chef-ssh-key-wrapper</small></a></p>
         <ul>
           <li><a href="https://github.com/vkhatri/chef-ssh-key-wrapper/zipball/master">Download <strong>ZIP File</strong></a></li>
@@ -28,30 +28,34 @@
       </header>
       <section>
         <h1>
-<a name="ssh_key_wrapper-cookbook" class="anchor" href="#ssh_key_wrapper-cookbook"><span class="octicon octicon-link"></span></a>ssh_key_wrapper Cookbook</h1>
+<a id="ssh_key_wrapper-cookbook" class="anchor" href="#ssh_key_wrapper-cookbook" aria-hidden="true"><span class="octicon octicon-link"></span></a>ssh_key_wrapper Cookbook</h1>
 
-<p>This is an <a href="https://wiki.opscode.com/display/chef/Home">OpsCode Chef</a> cookbook for Managing SSH Private Key file using Chef Data Bag and SSH Wrapper file mainly for GIT.</p>
+<p><a href="https://travis-ci.org/vkhatri/chef-ssh-key-wrapper"><img src="https://travis-ci.org/vkhatri/chef-ssh-key-wrapper.svg?branch=master" alt="Build Status"></a></p>
+
+<p>This is a <a href="https://www.getchef.com/chef/">Chef</a> cookbook for Managing SSH Private Key file using Chef Data Bag and SSH Wrapper file mainly for GIT.</p>
 
 <p>All SSH Private Keys are stored in a Databag as a Databag item.</p>
 
 <h2>
-<a name="cookbook-recipes" class="anchor" href="#cookbook-recipes"><span class="octicon octicon-link"></span></a>Cookbook Recipes</h2>
+<a id="cookbook-recipes" class="anchor" href="#cookbook-recipes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cookbook Recipes</h2>
 
 <ul>
 <li>
 <code>ddnsupdate::private_keys</code>   - manage ssh key and wrapper via node attribute using LWRP</li>
-</ul><h2>
-<a name="cookbook-repository" class="anchor" href="#cookbook-repository"><span class="octicon octicon-link"></span></a>Cookbook Repository</h2>
+</ul>
+
+<h2>
+<a id="repository" class="anchor" href="#repository" aria-hidden="true"><span class="octicon octicon-link"></span></a>Repository</h2>
 
 <p><a href="https://github.com/vkhatri/chef-ssh-key-wrapper">https://github.com/vkhatri/chef-ssh-key-wrapper</a></p>
 
 <h2>
-<a name="cookbook-dependencies" class="anchor" href="#cookbook-dependencies"><span class="octicon octicon-link"></span></a>Cookbook Dependencies</h2>
+<a id="cookbook-dependencies" class="anchor" href="#cookbook-dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cookbook Dependencies</h2>
 
 <p>None</p>
 
 <h2>
-<a name="cookbook-lwrp" class="anchor" href="#cookbook-lwrp"><span class="octicon octicon-link"></span></a>Cookbook LWRP</h2>
+<a id="cookbook-lwrp" class="anchor" href="#cookbook-lwrp" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cookbook LWRP</h2>
 
 <p><strong>LWRP - ssh_key_wrapper_private</strong></p>
 
@@ -105,10 +109,12 @@ end
 <em>key_file</em> - ssh private key file path, default to user $HOME/.ssh/#{key_name}</li>
 <li><p><em>key_secret</em> - if provided, decrypt ssh private key before create ssh key file</p></li>
 <li><p><em>user (default: <code>node.ssh_key_wrapper.user</code>)</em> - owner of ssh private key file</p></li>
-<li>
-<em>group (deault: <code>node.ssh_key_wrapper.group</code>)</em> - group of ssh private key file</li>
-</ul><h2>
-<a name="cookbook-core-attributes" class="anchor" href="#cookbook-core-attributes"><span class="octicon octicon-link"></span></a>Cookbook Core Attributes</h2>
+<li><p><em>group (deault: <code>node.ssh_key_wrapper.group</code>)</em> - group of ssh private key file</p></li>
+<li><p><em>manage_key_dir (deault: <code>node.ssh_key_wrapper.manage_key_dir</code>)</em> - manage ssh private key file directory</p></li>
+</ul>
+
+<h2>
+<a id="cookbook-core-attributes" class="anchor" href="#cookbook-core-attributes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cookbook Core Attributes</h2>
 
 <ul>
 <li>
@@ -127,34 +133,43 @@ end
 <code>default[:ssh_key_wrapper][:group]</code> (default: <code>root</code>): default ssh key and wrapper file group</li>
 <li>
 <code>default[:ssh_key_wrapper][:private_keys]</code> (default: <code>{}</code>): attribute used by recipe <code>ssh_key_wrapper::private_keys</code> to create <code>ssh_key_wrapper_private</code> resources</li>
-</ul><h2>
-<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+<li>
+<code>default[:ssh_key_wrapper][:manage_key_dir]</code> (default: <code>true</code>): manage ssh private key file directory</li>
+</ul>
+
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
 <ol>
 <li>Fork the repository on Github</li>
 <li>Create a named feature branch (like <code>add_component_x</code>)</li>
 <li>Write your change</li>
 <li>Write tests for your change (if applicable)</li>
-<li>Run the tests, ensuring they all pass</li>
-<li>Write description about changes</li>
+<li>Run the tests (<code>rake</code>), ensuring they all pass</li>
+<li>Write new resource/attribute description to <code>README.md</code>
+</li>
+<li>Write description about changes to PR</li>
 <li>Submit a Pull Request using Github</li>
-</ol><h2>
-<a name="copyright--license" class="anchor" href="#copyright--license"><span class="octicon octicon-link"></span></a>Copyright &amp; License</h2>
+</ol>
 
-<p>Authors:: Virender Khatri (<a href="mailto:vir.khatri@gmail.com">vir.khatri@gmail.com</a>)</p>
+<h2>
+<a id="copyright--license" class="anchor" href="#copyright--license" aria-hidden="true"><span class="octicon octicon-link"></span></a>Copyright &amp; License</h2>
 
-<p>Licensed under the Apache License, Version 2.0 (the "License");
+<p>Authors:: Virender Khatri and <a href="https://github.com/vkhatri/chef-ssh-key-wrapper/graphs/contributors">Contributors</a></p>
+
+<pre>
+Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
-You may obtain a copy of the License at</p>
+You may obtain a copy of the License at
 
-<pre><code>http://www.apache.org/licenses/LICENSE-2.0
-</code></pre>
+    http://www.apache.org/licenses/LICENSE-2.0
 
-<p>Unless required by applicable law or agreed to in writing, software
+Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.</p>
+limitations under the License.
+</pre>
       </section>
     </div>
     <footer>
