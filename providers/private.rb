@@ -42,7 +42,7 @@ action :create do
   directory ::File.dirname(key_file) do
     owner new_resource.user
     group new_resource.group
-    mode 0600
+    mode 0700
     only_if { new_resource.manage_key_dir }
   end
 
