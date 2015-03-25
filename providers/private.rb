@@ -42,11 +42,12 @@ action :create do
   directory ::File.dirname(key_file) do
     owner new_resource.user
     group new_resource.group
-    mode 0600
+    mode 0700
     only_if { new_resource.manage_key_dir }
   end
 
   file "ssh_private_key_file_#{key_file}" do
+    path key_file
     content key_content
     owner new_resource.user
     group new_resource.group
@@ -54,6 +55,7 @@ action :create do
   end
 
   template "ssh_wrapper_file_#{wrapper_file}" do
+    path wrapper_file
     cookbook new_resource.cookbook
     source new_resource.template
     owner new_resource.user
