@@ -5,12 +5,19 @@ ssh_key_wrapper Cookbook
 
 This is a [Chef] cookbook for Managing SSH Private Key file using Chef Data Bag and SSH Wrapper file mainly for GIT.
 
-All SSH Private Keys are stored in a Databag as a Databag item.
+All SSH Private Keys are stored in a Databag as a Databag item to maintain simplicity.
+
+SSH Private Key is stored in a Databag item which could be password protected.
+
+
+## TODO
+
+* add LWRP resource `public` to manage `authorized_keys`
 
 
 ## Cookbook Recipes
 
-- `ddnsupdate::private_keys`   - manage ssh key and wrapper via node attribute using LWRP
+- `ddnsupdate::private_keys`   - manage ssh key and wrapper via node attribute using LWRP `ssh_key_wrapper_private`
 
 
 ## Repository
@@ -37,8 +44,13 @@ ssh_key_wrapper_private LWRP is used to create/delete ssh private key file and s
       "ssh_key_wrapper": {
       	"private_keys": {
           "test": {
-            "user": "virender",
-            "group": "devops"
+            "user": "foo",
+            "group": "foo",
+            "key_name": "ssh-databag-item-name",
+            "enable_wrapper": true,
+            "wrapper_file": "wrapper file",
+            "key_file" "ssh private key file",
+            "databag": "data bag"
           }
         }
       }
@@ -48,7 +60,7 @@ ssh_key_wrapper_private LWRP is used to create/delete ssh private key file and s
 
 *Create a RR using LWRP*
 
-    ssh_key_wrapper_private "key name" do
+    ssh_key_wrapper_private "foo" do
       option option_name
     end
 
@@ -62,39 +74,37 @@ ssh_key_wrapper_private LWRP is used to create/delete ssh private key file and s
 
 **LWRP Options**
 
-
 Parameters:
 
-- *key_name* - ssh private key file name, set to name_attribute
+- *key_name* - ssh private key file name, LWRP will lookup a data bag item with this attribute value
+- *databag (default: `node['ssh_key_wrapper']['databag']`)* - data bag to read ssh private key file item
+- *databag_secret (default: `node['ssh_key_wrapper']['databag_secret']`)* - encrypted data bag secret
+- *cookbook (default: `node['ssh_key_wrapper']['wrapper']`)* - ssh wrapper file template cookbook
+- *template (default: `node['ssh_key_wrapper']['template']`)* - ssh wrapper file template name
+- *enable_wrapper (default: `node['ssh_key_wrapper']['enable_wrapper']`)* - whether to create ssh wrapper
+- *wrapper_file (default: `$HOME/.ssh/#{key_name}_wrapper`)* - ssh wrapper file path
+- *key_file (default: `$HOME/.ssh/#{key_name}`)* - ssh private key file path
+- *key_secret (default: `nil`)* - if provided, decrypt ssh private key
+- *user (default: `node['ssh_key_wrapper']['user']`)* - owner of ssh private key file
+- *group (deault: `node['ssh_key_wrapper']['group']`)* - group of ssh private key file
 
-- *databag (default: `node.ssh_key_wrapper.databag`)* - data bag to read ssh private key file item
-- *cookbook (default: `node.ssh_key_wrapper.wrapper`)* - ssh wrapper file template cookbook
-- *template (default: `node.ssh_key_wrapper.template`)* - ssh wrapper file template name
-
-- *enable_wrapper (default: `node.ssh_key_wrapper.enable_wrapper`)* - enable/disable create ssh wrapper for a private key
-- *wrapper_file* - ssh wrapper file path, default to user $HOME/.ssh/#{key_name}_wrapper
-- *key_file* - ssh private key file path, default to user $HOME/.ssh/#{key_name}
-- *key_secret* - if provided, decrypt ssh private key before create ssh key file
-
-- *user (default: `node.ssh_key_wrapper.user`)* - owner of ssh private key file
-- *group (deault: `node.ssh_key_wrapper.group`)* - group of ssh private key file
-
-- *manage_key_dir (deault: `node.ssh_key_wrapper.manage_key_dir`)* - manage ssh private key file directory
+- *manage_key_dir (deault: `node['ssh_key_wrapper']['manage_key_dir']`)* - manage ssh private key file directory
 
 
 ## Cookbook Core Attributes
 
  * `default[:ssh_key_wrapper][:databag]` (default: `ssh_key_wrapper`): data bag for ssh key content, each ssh key is a data bag item.
 
-    Note: ssh private key data bag item attribute is 'key'
+    Note: ssh private key data bag item must have an attribute 'key' with ssh private key content
 
- * `default[:ssh_key_wrapper][:cookbook]` (default: `ssh_key_wrapper`): cookbook for ssh wrapper file template
- * `default[:ssh_key_wrapper][:template]` (default: `wrapper.erb`): template name for ssh wrapper file
- * `default[:ssh_key_wrapper][:enable_wrapper]` (default: `true`): create ssh wrapper
- * `default[:ssh_key_wrapper][:user]` (default: `root`): default ssh key and wrapper file owner
- * `default[:ssh_key_wrapper][:group]` (default: `root`): default ssh key and wrapper file group
- * `default[:ssh_key_wrapper][:private_keys]` (default: `{}`): attribute used by recipe `ssh_key_wrapper::private_keys` to create `ssh_key_wrapper_private` resources
- * `default[:ssh_key_wrapper][:manage_key_dir]` (default: `true`): manage ssh private key file directory
+ * `default['ssh_key_wrapper']['databag_secret']` (default: `ssh_key_wrapper`): encrypted data bag secret
+ * `default['ssh_key_wrapper']['cookbook']` (default: `ssh_key_wrapper`): cookbook for ssh wrapper file template
+ * `default['ssh_key_wrapper']['template']` (default: `wrapper.erb`): template name for ssh wrapper file
+ * `default['ssh_key_wrapper']['enable_wrapper']` (default: `true`): create ssh wrapper
+ * `default['ssh_key_wrapper']['user']` (default: `root`): default ssh key and wrapper file owner
+ * `default['ssh_key_wrapper']['group']` (default: `root`): default ssh key and wrapper file group
+ * `default['ssh_key_wrapper']['private_keys']` (default: `{}`): attribute used by recipe `ssh_key_wrapper::private_keys` to create `ssh_key_wrapper_private` resources
+ * `default['ssh_key_wrapper']['manage_key_dir']` (default: `true`): manage ssh private key file directory
 
 
 ## Contributing
