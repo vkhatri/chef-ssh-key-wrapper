@@ -26,27 +26,34 @@ def default_key_file(user, key_name)
 end
 
 action :create do
+  if new_resource.databag_secret
+    secret = Chef::EncryptedDataBagItem.load_secret(new_resource.databag_secret)
+    databag = data_bag_item(new_resource.databag, new_resource.key_name, secret)
+  else
+    databag = data_bag_item(new_resource.databag, new_resource.key_name)
+  end
 
-  databag = data_bag_item(new_resource.databag, new_resource.key_name)
   fail "data bag or data bag key item does not exists, databag #{new_resource.databag} must have an item #{new_resource.key_name}" unless databag
 
+  # verify data bag item ssh private key content attribute - 'key'
   key_content = databag['key']
   fail "databag #{new_resource.databag} item #{new_resource.key_name} must have ssh key content attribute 'key'" unless key_content
 
   # decrypt ssh private key provided key_secret
   key_content = OpenSSL::PKey.read(key_content, new_resource.key_secret) if new_resource.key_secret
 
+  # default to user $HOME/.ssh/#{new_resource.key_name}
   key_file = new_resource.key_file || default_key_file(new_resource.user, new_resource.key_name)
   wrapper_file = new_resource.wrapper_file || (key_file + '_wrapper')
 
-  directory ::File.dirname(key_file) do
+  d = directory ::File.dirname(key_file) do
     owner new_resource.user
     group new_resource.group
     mode 0700
     only_if { new_resource.manage_key_dir }
   end
 
-  file "ssh_private_key_file_#{key_file}" do
+  f = file "ssh_private_key_file_#{key_file}" do
     path key_file
     content key_content
     owner new_resource.user
@@ -54,7 +61,7 @@ action :create do
     mode 0400
   end
 
-  template "ssh_wrapper_file_#{wrapper_file}" do
+  t = template "ssh_wrapper_file_#{wrapper_file}" do
     path wrapper_file
     cookbook new_resource.cookbook
     source new_resource.template
@@ -64,19 +71,22 @@ action :create do
     variables(:key => key_file)
     only_if { new_resource.enable_wrapper }
   end
+
+  new_resource.updated_by_last_action(true) if d.updated? || f.updated? || t.updated?
 end
 
 action :delete do
-
   key_file = new_resource.key_file || default_key_file(new_resource.user, new_resource.key_name)
   wrapper_file = new_resource.wrapper_file || (key_file + '_wrapper')
 
-  file "ssh_private_key_file_#{key_file}" do
+  f = file "ssh_private_key_file_#{key_file}" do
     action :delete
   end
 
-  file "ssh_wrapper_file_#{wrapper_file}" do
+  w = file "ssh_wrapper_file_#{wrapper_file}" do
     action :delete
     only_if { new_resource.enable_wrapper }
   end
+
+  new_resource.updated_by_last_action(true) if f.updated? || w.updated?
 end
