@@ -27,7 +27,7 @@ attribute :manage_key_dir,  :kind_of => [TrueClass, FalseClass], :default => nod
 attribute :key_file,        :kind_of => String, :default => nil
 attribute :key_secret,      :kind_of => String, :default => nil
 attribute :key_name,        :kind_of => String, :name_attribute => true,  :default => nil
-attribute :databag,         :kind_of => String, :default => node['ssh_key_wrapper']['databag']
+attribute :databag,         :kind_of => String, :required => true, :default => node['ssh_key_wrapper']['databag']
 attribute :user,      :kind_of => String, :default => node['ssh_key_wrapper']['user']
 attribute :group,     :kind_of => String, :default => node['ssh_key_wrapper']['group']
 attribute :cookbook,  :kind_of => String, :default => node['ssh_key_wrapper']['cookbook']
