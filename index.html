@@ -4,44 +4,64 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Chef SSH Key Wrapper by vkhatri</title>
-
     <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
   </head>
   <body>
-    <div class="wrapper">
+
       <header>
         <h1>Chef SSH Key Wrapper</h1>
         <p>Chef cookbook LWRP to Manage SSH Key &amp; Wrapper</p>
-        <p class="view"><a href="https://github.com/vkhatri/chef-ssh-key-wrapper">View the Project on GitHub <small>vkhatri/chef-ssh-key-wrapper</small></a></p>
-        <ul>
-          <li><a href="https://github.com/vkhatri/chef-ssh-key-wrapper/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/vkhatri/chef-ssh-key-wrapper/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/vkhatri/chef-ssh-key-wrapper">View On <strong>GitHub</strong></a></li>
-        </ul>
       </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/vkhatri/chef-ssh-key-wrapper" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/vkhatri/chef-ssh-key-wrapper/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/vkhatri/chef-ssh-key-wrapper/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
       <section>
         <h1>
 <a id="ssh_key_wrapper-cookbook" class="anchor" href="#ssh_key_wrapper-cookbook" aria-hidden="true"><span class="octicon octicon-link"></span></a>ssh_key_wrapper Cookbook</h1>
 
 <p><a href="https://travis-ci.org/vkhatri/chef-ssh-key-wrapper"><img src="https://travis-ci.org/vkhatri/chef-ssh-key-wrapper.svg?branch=master" alt="Build Status"></a></p>
 
-<p>This is a <a href="https://www.getchef.com/chef/">Chef</a> cookbook for Managing SSH Private Key file using Chef Data Bag and SSH Wrapper file mainly for GIT.</p>
+<p>This is a <a href="https://www.getchef.com/chef/">Chef</a> cookbook for Managing SSH Private Key file using Chef Data Bag and SSH Wrapper file (primarily for GIT).</p>
 
-<p>All SSH Private Keys are stored in a Databag as a Databag item.</p>
+<p>All SSH Private Keys are stored in a Databag as a Databag item to maintain simplicity.</p>
+
+<h2>
+<a id="todo" class="anchor" href="#todo" aria-hidden="true"><span class="octicon octicon-link"></span></a>TODO</h2>
+
+<ul>
+<li>add LWRP resource <code>public</code> to manage <code>authorized_keys</code>
+</li>
+</ul>
 
 <h2>
 <a id="cookbook-recipes" class="anchor" href="#cookbook-recipes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cookbook Recipes</h2>
 
 <ul>
-<li>
-<code>ddnsupdate::private_keys</code>   - manage ssh key and wrapper via node attribute using LWRP</li>
+<li><p>default   - not used</p></li>
+<li><p>private_keys   - create LWRP <code>private_keys</code> resources using node attribute</p></li>
 </ul>
 
 <h2>
@@ -50,16 +70,11 @@
 <p><a href="https://github.com/vkhatri/chef-ssh-key-wrapper">https://github.com/vkhatri/chef-ssh-key-wrapper</a></p>
 
 <h2>
-<a id="cookbook-dependencies" class="anchor" href="#cookbook-dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cookbook Dependencies</h2>
-
-<p>None</p>
-
-<h2>
 <a id="cookbook-lwrp" class="anchor" href="#cookbook-lwrp" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cookbook LWRP</h2>
 
 <p><strong>LWRP - ssh_key_wrapper_private</strong></p>
 
-<p>ssh_key_wrapper_private LWRP is used to create/delete ssh private key file and ssh wrapper file.</p>
+<p>ssh_key_wrapper_private LWRP is used to manage ssh private key file as well as ssh wrapper file for the ssh private key.</p>
 
 <p><strong>LWRP example</strong></p>
 
@@ -69,8 +84,14 @@
   "ssh_key_wrapper": {
     "private_keys": {
       "test": {
-        "user": "virender",
-        "group": "devops"
+        "user": "foo",
+        "group": "foo",
+        "key_name": "databag item name",
+        "enable_wrapper": true,
+        "wrapper_file": "wrapper file path",
+        "key_file" "ssh private key file path",
+        "databag": "databag name",
+        "action": "create"
       }
     }
   }
@@ -79,16 +100,16 @@
 
 <p><em>Create a RR using LWRP</em></p>
 
-<pre><code>ssh_key_wrapper_private "key name" do
-  option option_name
+<pre><code>ssh_key_wrapper_private "foo" do
+  option value ...
 end
 </code></pre>
 
 <p><em>Delete a RR using LWRP</em></p>
 
 <pre><code>ssh_key_wrapper_private "key name" do
-  option option_name
-  action :delete
+  option value
+  action :delete ...
 end
 </code></pre>
 
@@ -97,20 +118,28 @@ end
 <p>Parameters:</p>
 
 <ul>
-<li><p><em>key_name</em> - ssh private key file name, set to name_attribute</p></li>
-<li><p><em>databag (default: <code>node.ssh_key_wrapper.databag</code>)</em> - data bag to read ssh private key file item</p></li>
 <li>
-<em>cookbook (default: <code>node.ssh_key_wrapper.wrapper</code>)</em> - ssh wrapper file template cookbook</li>
-<li><p><em>template (default: <code>node.ssh_key_wrapper.template</code>)</em> - ssh wrapper file template name</p></li>
-<li><p><em>enable_wrapper (default: <code>node.ssh_key_wrapper.enable_wrapper</code>)</em> - enable/disable create ssh wrapper for a private key</p></li>
+<em>key_name</em> - ssh private key file name, LWRP will lookup a data bag item with this attribute value</li>
 <li>
-<em>wrapper_file</em> - ssh wrapper file path, default to user $HOME/.ssh/#{key_name}_wrapper</li>
+<em>databag (default: <code>node['ssh_key_wrapper']['databag']</code>)</em> - data bag to read ssh private key file item</li>
 <li>
-<em>key_file</em> - ssh private key file path, default to user $HOME/.ssh/#{key_name}</li>
-<li><p><em>key_secret</em> - if provided, decrypt ssh private key before create ssh key file</p></li>
-<li><p><em>user (default: <code>node.ssh_key_wrapper.user</code>)</em> - owner of ssh private key file</p></li>
-<li><p><em>group (deault: <code>node.ssh_key_wrapper.group</code>)</em> - group of ssh private key file</p></li>
-<li><p><em>manage_key_dir (deault: <code>node.ssh_key_wrapper.manage_key_dir</code>)</em> - manage ssh private key file directory</p></li>
+<em>databag_secret (default: <code>node['ssh_key_wrapper']['databag_secret']</code>)</em> - encrypted data bag secret</li>
+<li>
+<em>cookbook (default: <code>node['ssh_key_wrapper']['wrapper']</code>)</em> - ssh wrapper file template cookbook</li>
+<li>
+<em>template (default: <code>node['ssh_key_wrapper']['template']</code>)</em> - ssh wrapper file template name</li>
+<li>
+<em>enable_wrapper (default: <code>node['ssh_key_wrapper']['enable_wrapper']</code>)</em> - whether to create ssh wrapper file</li>
+<li>
+<em>wrapper_file (default: <code>$HOME/.ssh/#{key_name}_wrapper</code>)</em> - ssh wrapper file path</li>
+<li>
+<em>key_file (default: <code>$HOME/.ssh/#{key_name}</code>)</em> - ssh private key file path</li>
+<li>
+<em>key_secret (default: <code>nil</code>)</em> - if provided, decrypt ssh private key databag item key content</li>
+<li>
+<em>user (default: <code>node['ssh_key_wrapper']['user']</code>)</em> - owner of ssh private key file</li>
+<li><p><em>group (deault: <code>node['ssh_key_wrapper']['group']</code>)</em> - group of ssh private key file</p></li>
+<li><p><em>manage_key_dir (deault: <code>node['ssh_key_wrapper']['manage_key_dir']</code>)</em> - whether to manage ssh private key file directory</p></li>
 </ul>
 
 <h2>
@@ -120,21 +149,23 @@ end
 <li>
 <p><code>default[:ssh_key_wrapper][:databag]</code> (default: <code>ssh_key_wrapper</code>): data bag for ssh key content, each ssh key is a data bag item.</p>
 
-<p>Note: ssh private key data bag item attribute is 'key'</p>
+<p>Note: ssh private key data bag item must have an attribute 'key' with ssh private key content</p>
 </li>
-<li><p><code>default[:ssh_key_wrapper][:cookbook]</code> (default: <code>ssh_key_wrapper</code>): cookbook for ssh wrapper file template</p></li>
+<li><p><code>default['ssh_key_wrapper']['databag_secret']</code> (default: <code>ssh_key_wrapper</code>): encrypted data bag secret</p></li>
 <li>
-<code>default[:ssh_key_wrapper][:template]</code> (default: <code>wrapper.erb</code>): template name for ssh wrapper file</li>
+<code>default['ssh_key_wrapper']['cookbook']</code> (default: <code>ssh_key_wrapper</code>): cookbook for ssh wrapper file template</li>
 <li>
-<code>default[:ssh_key_wrapper][:enable_wrapper]</code> (default: <code>true</code>): create ssh wrapper</li>
+<code>default['ssh_key_wrapper']['template']</code> (default: <code>wrapper.erb</code>): template name for ssh wrapper file</li>
 <li>
-<code>default[:ssh_key_wrapper][:user]</code> (default: <code>root</code>): default ssh key and wrapper file owner</li>
+<code>default['ssh_key_wrapper']['enable_wrapper']</code> (default: <code>true</code>): create ssh wrapper</li>
 <li>
-<code>default[:ssh_key_wrapper][:group]</code> (default: <code>root</code>): default ssh key and wrapper file group</li>
+<code>default['ssh_key_wrapper']['user']</code> (default: <code>root</code>): default ssh key and wrapper file owner</li>
 <li>
-<code>default[:ssh_key_wrapper][:private_keys]</code> (default: <code>{}</code>): attribute used by recipe <code>ssh_key_wrapper::private_keys</code> to create <code>ssh_key_wrapper_private</code> resources</li>
+<code>default['ssh_key_wrapper']['group']</code> (default: <code>root</code>): default ssh key and wrapper file group</li>
 <li>
-<code>default[:ssh_key_wrapper][:manage_key_dir]</code> (default: <code>true</code>): manage ssh private key file directory</li>
+<code>default['ssh_key_wrapper']['private_keys']</code> (default: <code>{}</code>): node attribute used by recipe <code>private_keys</code> to create lwrp <code>private</code> resources</li>
+<li>
+<code>default['ssh_key_wrapper']['manage_key_dir']</code> (default: <code>true</code>): manage ssh private key file directory</li>
 </ul>
 
 <h2>
@@ -171,11 +202,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 </pre>
       </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/vkhatri">vkhatri</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
     </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/vkhatri">vkhatri</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
